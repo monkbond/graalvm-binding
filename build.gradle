@@ -39,7 +39,7 @@ ext {
   interlokArtifactRepo = project.findProperty('interlokArtifactRepo') ?: 'https://nexus.adaptris.net/nexus'
   mavenPublishUrl = project.findProperty('mavenPublishUrl') ?: 'https://maven.pkg.github.com/monkbond/graalvm-binding'
   mavenPublishUsername= project.findProperty('mavenPublishUsername') ?: System.getenv("GITHUB_ACTOR")
-  mavenPublishPassword= project.findProperty('mavenPublishUsername') ?: System.getenv("GITHUB_TOKEN")
+  mavenPublishPassword= project.findProperty('mavenPublishPassword') ?: System.getenv("GITHUB_TOKEN")
 
   javadocsBaseUrl = interlokArtifactRepo + "/content/sites/javadocs/com/adaptris"
   defaultNexusRepo = project.findProperty('defaultNexusRepo') ?: 'unknown'
@@ -347,7 +347,7 @@ publishing {
   }
   repositories {
     maven {
-      name = "github-packages"
+      name = "gpr"
       url mavenPublishUrl
       credentials {
         username = mavenPublishUsername
