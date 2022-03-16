@@ -29,5 +29,5 @@ jobs:
       with:
         gradle-version: wrapper
         arguments: -Djava.security.egd=file:/dev/./urandom check
-   - name: codecov.io
-     uses: codecov/codecov-action@v2.1.0
+    - name: codecov.io
+      uses: codecov/codecov-action@v2.1.0
