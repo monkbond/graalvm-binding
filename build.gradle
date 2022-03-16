@@ -4,7 +4,7 @@ plugins {
   id 'maven-publish'
   id 'jacoco'
   id 'com.github.spotbugs' version '5.0.6'
-  id 'org.owasp.dependencycheck' version '6.5.3'
+  id 'org.owasp.dependencycheck' version '7.0.0'
   id "org.gradle.test-retry" version "1.3.1"
   id "io.freefair.lombok" version "6.4.1"
   id 'org.barfuin.gradle.taskinfo' version '1.3.1'
@@ -34,11 +34,14 @@ ext {
   ]
 
   interlokCoreVersion = project.findProperty('interlokCoreVersion') ?: interlokVersioning.latestSnapshot()
-  releaseVersion = project.findProperty('releaseVersion') ?: interlokCoreVersion
+  releaseVersion = project.findProperty('releaseVersion') ?: interlokCoreVersion.replace('-RELEASE', '-SNAPSHOT')
 
-  nexusBaseUrl = project.findProperty('nexusBaseUrl') ?: 'https://nexus.adaptris.net/nexus'
-  mavenPublishUrl = project.findProperty('mavenPublishUrl') ?: nexusBaseUrl + '/content/repositories/snapshots'
-  javadocsBaseUrl = nexusBaseUrl + "/content/sites/javadocs/com/adaptris"
+  interlokArtifactRepo = project.findProperty('interlokArtifactRepo') ?: 'https://nexus.adaptris.net/nexus'
+  mavenPublishUrl = project.findProperty('mavenPublishUrl') ?: 'https://maven.pkg.github.com/monkbond/graalvm-binding'
+  mavenPublishUsername= project.findProperty('mavenPublishUsername') ?: System.getenv("GITHUB_ACTOR")
+  mavenPublishPassword= project.findProperty('mavenPublishUsername') ?: System.getenv("GITHUB_TOKEN")
+
+  javadocsBaseUrl = interlokArtifactRepo + "/content/sites/javadocs/com/adaptris"
   defaultNexusRepo = project.findProperty('defaultNexusRepo') ?: 'unknown'
   offlineJavadocPackageDir = new File(project.buildDir, "offline-javadoc-packages")
 
@@ -151,12 +154,12 @@ repositories {
   }
   maven { url "https://jitpack.io" }
   maven {
-    url "$nexusBaseUrl/content/groups/interlok"
+    url "$interlokArtifactRepo/content/groups/interlok"
     content {
       includeGroupByRegex "com\\.adaptris.*"
     }
   }
-  maven { url "$nexusBaseUrl/content/groups/public" }
+  maven { url "$interlokArtifactRepo/content/groups/public" }
 }
 
 
@@ -194,7 +197,7 @@ dependencies {
   api ("com.adaptris:interlok-core:$interlokCoreVersion") { changing= true }
   api ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true }
   annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion")
-  umlDoclet("nl.talsmasoftware:umldoclet:2.0.14")
+  umlDoclet("nl.talsmasoftware:umldoclet:2.0.15")
 
   testImplementation ('junit:junit:4.13.2')
   testImplementation ("org.slf4j:slf4j-simple:$slf4jVersion")
@@ -210,8 +213,6 @@ dependencies {
   testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.8.2") {
     because 'allows tests to run from IDEs that bundle older version of launcher'
   }
-
-  testImplementation ("org.awaitility:awaitility:4.1.1")
 
   javadoc("com.adaptris:interlok-core-apt:$interlokCoreVersion")
   offlineJavadocPackages ("com.adaptris:interlok-core:$interlokCoreVersion:javadoc@jar")
@@ -325,35 +326,36 @@ test {
 }
 
 
-// publishing {
-//   publications {
-//     mavenJava(MavenPublication) {
-//       from components.java
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
 
-//       artifact javadocJar { classifier "javadoc" }
+      artifact javadocJar { classifier "javadoc" }
 
-//       pom.withXml {
-//         asNode().appendNode("name", componentName)
-//         asNode().appendNode("description", componentDesc)
-//         // asNode().appendNode("url", "https://interlok.adaptris.net/interlok-docs/#/")
-//         def properties = asNode().appendNode("properties")
-//         properties.appendNode("target", "4.5.0+")
-//         properties.appendNode("tags", "graalvm scripting")
-//         // properties.appendNode("readme", "https://github.com/quotidian-ennui/interlok-graalvm/raw/develop/README.md")
-//         // properties.appendNode("repository", "https://github.com/quotidian-ennui/interlok-graalvm")
-//       }
-//     }
-//   }
-//   repositories {
-//     maven {
-//       credentials {
-//         username repoUsername
-//         password repoPassword
-//       }
-//       url mavenPublishUrl
-//     }
-//   }
-// }
+      pom.withXml {
+        asNode().appendNode("name", componentName)
+        asNode().appendNode("description", componentDesc)
+        // asNode().appendNode("url", "https://interlok.adaptris.net/interlok-docs/#/")
+        def properties = asNode().appendNode("properties")
+        properties.appendNode("target", "4.5.0+")
+        properties.appendNode("tags", "graalvm scripting")
+        properties.appendNode("readme", "https://github.com/monkbond/graalvm-binding/raw/develop/README.md")
+        properties.appendNode("repository", "https://github.com/monkbond/graalvm-binding/")
+      }
+    }
+  }
+  repositories {
+    maven {
+      name = "github-packages"
+      url mavenPublishUrl
+      credentials {
+        username = mavenPublishUsername
+        password = mavenPublishPassword
+      }
+    }
+  }
+}
 
 spotbugsMain {
   effort = "max"
