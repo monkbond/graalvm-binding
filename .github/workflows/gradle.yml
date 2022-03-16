@@ -1,0 +1,29 @@
+name: Java CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set up GraalVM
+      uses: graalvm/setup-graalvm@v1
+      with:
+        version: 'latest'
+        java-version: '11'
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Setup Ubuntu
+      run: |
+        sudo apt-get -y update
+        sudo apt-get -y install haveged
+        sudo systemctl enable haveged
+        sudo systemctl restart haveged
+    - name: Gradle Build
+      uses: gradle/gradle-build-action@v2
+      with:
+        gradle-version: wrapper
+        arguments: -Djava.security.egd=file:/dev/./urandom check
+#    - name: codecov.io
+#      uses: codecov/codecov-action@v2.1.0
