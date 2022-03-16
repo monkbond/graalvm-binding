@@ -1,6 +1,10 @@
-name: Java CI
+name: gradle
 
-on: [push]
+on:
+  push:
+    branches-ignore:
+      - main
+      - master
 
 jobs:
   build:
