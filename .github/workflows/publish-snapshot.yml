@@ -1,7 +1,6 @@
 name: publish-snapshot
 
 on:
-  workflow_dispatch:
   push:
     branches-ignore:
       - main
