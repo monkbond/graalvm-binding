@@ -41,6 +41,8 @@ ext {
   mavenPublishUsername= project.findProperty('mavenPublishUsername') ?: System.getenv("GITHUB_ACTOR")
   mavenPublishPassword= project.findProperty('mavenPublishPassword') ?: System.getenv("GITHUB_TOKEN")
 
+  jitpackVersionOverride= project.findProperty('version') ?: releaseVersion
+
   javadocsBaseUrl = interlokArtifactRepo + "/content/sites/javadocs/com/adaptris"
   defaultNexusRepo = project.findProperty('defaultNexusRepo') ?: 'unknown'
   offlineJavadocPackageDir = new File(project.buildDir, "offline-javadoc-packages")
@@ -62,6 +64,9 @@ ext {
   graalvmVersion = "22.0.0.2"
 }
 
+// jitpack executes with -Pgroup= -Pversion=
+// Can't use VERSION env var since this appears to be overridden by SDK man.
+// Since we set jitpackVersionOverride == -Pversion or defaults to 4.5-SNAPSHOT then
 ext.jitpackContext = [
 
   is_jitpack: { ->
@@ -69,17 +74,17 @@ ext.jitpackContext = [
   },
 
   version: { ->
-    def jv = System.getenv().get("VERSION")
-    // If it's develop-SNAPSHOT or develop-commitHash, just use the
-    // releaseVersion
-    if (jv.startsWith("develop")) {
+    if (jitpackVersionOverride.startsWith("develop")) {
       return releaseVersion
     }
-    return jv;
+    return jitpackVersionOverride
   },
 
   buildInfo: { ->
-    return System.getenv().get("VERSION")
+    if (jitpackVersionOverride.startsWith("develop")) {
+      return jitpackVersionOverride
+    }
+    return new Date().format('HH:mm:ss z');
   }
 ]
 
