@@ -1,12 +1,16 @@
 package monkbond.scripting.graalvm;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import com.adaptris.core.Adapter;
 import com.adaptris.core.management.config.ConfigurationCheckReport;
 import com.adaptris.core.management.config.ValidationCheckerImpl;
 import com.adaptris.core.util.LoggingHelper;
 import com.adaptris.core.util.ObjectScanner;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
+import lombok.NoArgsConstructor;
 
 /**
  * Checks that the java vendor is GraalVM.
@@ -14,24 +18,27 @@ import java.util.function.Function;
  * checker class since the services have a hard dependency on the graalvm classes so it may fail ot unmarshal
  * anyway.</p>
  */
+@NoArgsConstructor
 public class GraalConfigChecker extends ValidationCheckerImpl {
 
   private static final String FRIENDLY_NAME = "GraalVM Polyglot Engine check";
 
+  private static String buildWarningMsg(ScriptingServiceImp s) {
+    return String.format(
+        "[%s] relies on Graal polyglot scripting but [%s] is not installed",
+        LoggingHelper.friendlyName(s), s.getLanguage());
+  }
+
   @Override
   protected void validate(Adapter adapter, ConfigurationCheckReport report) {
-    // If we're a GraalVM, then we're all good.
-    if (isGraalVM()) {
-      return;
-    }
     try {
       Collection<ScriptingServiceImp> scripts = scanner().scan(adapter);
+      Collection<String> langs = installedLangs();
       // It's a warning, we may be building a zip file for execution inside a GraalVM env.
       for (ScriptingServiceImp s : scripts) {
-        report.getWarnings()
-            .add(String.format(
-                "[%s] relies on Graal polyglot scripting but current 'java.vendor' is not Graal",
-                LoggingHelper.friendlyName(s)));
+        if (!langs.contains(s.getLanguage())) {
+          report.getWarnings().add(buildWarningMsg(s));
+        }
       }
     } catch (Exception ex) {
       report.getFailureExceptions().add(ex);
@@ -47,10 +54,11 @@ public class GraalConfigChecker extends ValidationCheckerImpl {
     return new ScriptingServiceScanner();
   }
 
-  protected boolean isGraalVM() {
-    return System.getProperty("java.vendor").toLowerCase().contains("graalvm");
+  private Collection<String> installedLangs() {
+    return List.copyOf(new DefaultContextBuilder().build().getEngine().getLanguages().keySet());
   }
 
+  @NoArgsConstructor(access = PRIVATE)
   private static class ScriptingServiceScanner extends ObjectScanner<ScriptingServiceImp> {
 
     @Override
