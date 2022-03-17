@@ -28,6 +28,6 @@ jobs:
       uses: gradle/gradle-build-action@v2
       with:
         gradle-version: wrapper
-        arguments: -Djava.security.egd=file:/dev/./urandom check
+        arguments: check
     - name: codecov.io
       uses: codecov/codecov-action@v2.1.0

@@ -24,13 +24,13 @@ jobs:
     - name: Setup Ubuntu
       run: |
         sudo apt-get -y update
-        sudo apt-get -y install haveged
+        sudo apt-get -y install haveged graphviz
         sudo systemctl enable haveged
         sudo systemctl restart haveged
     - name: Gradle Build
       uses: gradle/gradle-build-action@v2
       with:
         gradle-version: wrapper
-        arguments: -Djava.security.egd=file:/dev/./urandom publish
+        arguments: publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
