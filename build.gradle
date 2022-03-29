@@ -86,7 +86,7 @@ ext.jitpackContext = [
     // Otherwise it'll be a release -Pversion=4.5.0, in which
     // case the date is fine.
     if (jitpackVersionOverride.contains(gitHash)) {
-      return gitBranch + "-SNAPSHOT"
+      return gitBranch + "-snapshot-" + new Date().format('HH:mm:ss z')
     }
     return new Date().format('HH:mm:ss z');
   }
@@ -160,7 +160,6 @@ ext.buildDetails = [
     }
     return releaseVersion
   }
-
 ]
 
 sourceCompatibility = JavaVersion.VERSION_11
