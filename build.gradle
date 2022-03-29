@@ -81,7 +81,7 @@ ext.jitpackContext = [
   },
 
   buildInfo: { ->
-    if (jitpackVersionOverride.startsWith("develop")) {
+    if (jitpackVersionOverride.contains("SNAPSHOT")) {
       return jitpackVersionOverride
     }
     return new Date().format('HH:mm:ss z');
