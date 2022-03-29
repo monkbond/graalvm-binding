@@ -42,7 +42,6 @@ ext {
   mavenPublishPassword= project.findProperty('mavenPublishPassword') ?: System.getenv("GITHUB_TOKEN")
 
   jitpackVersionOverride= project.findProperty('version') ?: releaseVersion
-
   javadocsBaseUrl = interlokArtifactRepo + "/content/sites/javadocs/com/adaptris"
   defaultNexusRepo = project.findProperty('defaultNexusRepo') ?: 'unknown'
   offlineJavadocPackageDir = new File(project.buildDir, "offline-javadoc-packages")
@@ -81,8 +80,13 @@ ext.jitpackContext = [
   },
 
   buildInfo: { ->
-    if (jitpackVersionOverride.contains("SNAPSHOT")) {
-      return jitpackVersionOverride
+    def gitHash= System.getenv("GIT_DESCRIBE")
+    def gitBranch=System.getenv("GIT_BRANCH")
+    // If it contains the hash, then it's probably -Pversion=develop-9898b555e6-1
+    // Otherwise it'll be a release -Pversion=4.5.0, in which
+    // case the date is fine.
+    if (jitpackVersionOverride.contains(gitHash)) {
+      return gitBranch + "-SNAPSHOT"
     }
     return new Date().format('HH:mm:ss z');
   }
