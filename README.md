@@ -1,10 +1,20 @@
 # graalvm-binding
 
+[![CodeQL](https://github.com/monkbond/graalvm-binding/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/monkbond/graalvm-binding/actions/workflows/codeql-analysis.yml)
+[![Gradle Build](https://github.com/monkbond/graalvm-binding/actions/workflows/gradle.yml/badge.svg)](https://github.com/monkbond/graalvm-binding/actions/workflows/gradle.yml)
+[![jitpack](https://jitpack.io/v/monkbond/graalvm-binding.svg)](https://jitpack.io/#monkbond/graalvm-binding)
+
 GraalVM is pretty awesome; and you want to embed Python in Interlok without trying to use `jython`, or you fancy some R or WASM (the list goes on).
 
 ## Installation
 
-The implication of attempting to use this library is that you're going to be executing using GraalVM. The available services are functionally equivalent to the existing `com.adaptris.core.services.EmbeddedScriptingService` and `com.adaptris.core.services.ScriptingService` and are largely similar in configuration.
+It's not discoverable via the Interlok-UI so you'll need to manually add it to your dependencies, use either the associated release or `develop-SNAPSHOT` to get the latest build.
+
+```gradle
+interlokRuntime ("com.github.monkbond:graalvm-binding:<version>") { changing=true }
+```
+
+The implication of attempting to use this library is that you're going to be running Interlok using GraalVM. The available services are functionally equivalent to the existing `com.adaptris.core.services.EmbeddedScriptingService` and `com.adaptris.core.services.ScriptingService` and are largely similar in configuration.
 
 - Configure GraalVM for your polyglot language of choice.
 - Configure and use the service.
