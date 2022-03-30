@@ -5,6 +5,9 @@ on:
     branches-ignore:
       - main
       - master
+  pull_request:
+    branches:
+      - develop
 
 jobs:
   build:
@@ -24,10 +27,15 @@ jobs:
         sudo apt-get -y install haveged
         sudo systemctl enable haveged
         sudo systemctl restart haveged
-    - name: Gradle Build
+    - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
       with:
         gradle-version: wrapper
-        arguments: check
+    - name: Execute Gradle build
+      run: |
+        ./gradlew check
+    - name: Gradle Dependency Check Analyze
+      run: |
+        ./gradlew dependencyCheckAnalyze
     - name: codecov.io
       uses: codecov/codecov-action@v2.1.0

@@ -2,9 +2,7 @@ name: publish-snapshot
 
 on:
   push:
-    branches-ignore:
-      - main
-      - master
+    branches: [ develop ]
 
 jobs:
   publish:
