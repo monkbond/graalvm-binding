@@ -9,6 +9,7 @@ plugins {
   id "io.freefair.lombok" version "6.4.1"
   id 'org.barfuin.gradle.taskinfo' version '1.3.1'
   id 'nebula.optional-base' version '7.0.0'
+  id 'org.ajoberstar.grgit' version '5.0.0'
 }
 
 ext {
@@ -109,21 +110,16 @@ ext.buildDetails = [
     return branchName;
   },
 
+
   buildInfo: { ->
     if (!jitpackContext.is_jitpack()) {
-      new ByteArrayOutputStream().withStream { os ->
-          exec {
-            executable = "git"
-            args = ["rev-parse", "--abbrev-ref", "HEAD"]
-            standardOutput = os
-          }
-          def branchName = os.toString().replaceAll("\r", "").replaceAll("\n", "").trim();
-          return buildDetails.gitBranchNameOrTimestamp(branchName);
-      }
+      def branchName= grgit ? grgit.branch.current.name : "No GIT Info"
+      return buildDetails.gitBranchNameOrTimestamp(branchName)
     } else {
       return jitpackContext.buildInfo()
     }
   },
+
 
   // If graphviz is installed via scoop, plantuml doesn't find it because it's not
   // in its expected "location(s)" it searches for c:\*\graphviz**\dot.exe
