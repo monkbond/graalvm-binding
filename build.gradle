@@ -73,22 +73,23 @@ ext.jitpackContext = [
   },
 
   version: { ->
-    if (jitpackVersionOverride.startsWith("develop")) {
-      return releaseVersion
-    }
     return jitpackVersionOverride
   },
 
   buildInfo: { ->
+    return new Date().format('HH:mm:ss z');
+  },
+
+  buildVersion: { ->
     def gitHash= System.getenv("GIT_DESCRIBE")
     def gitBranch=System.getenv("GIT_BRANCH")
     // If it contains the hash, then it's probably -Pversion=develop-9898b555e6-1
     // Otherwise it'll be a release -Pversion=4.5.0, in which
     // case the date is fine.
     if (jitpackVersionOverride.contains(gitHash)) {
-      return gitBranch + "-snapshot-" + new Date().format('HH:mm:ss z')
+      return gitBranch + "-snapshot"
     }
-    return new Date().format('HH:mm:ss z');
+    return jitpackVersionOverride
   }
 ]
 
@@ -159,7 +160,15 @@ ext.buildDetails = [
       return jitpackContext.version()
     }
     return releaseVersion
+  },
+
+  buildVersion: { ->
+    if (jitpackContext.is_jitpack()) {
+      return jitpackContext.buildVersion()
+    }
+    return releaseVersion
   }
+
 ]
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -285,7 +294,7 @@ jar {
 def generateVersionFile = tasks.register('generateVersionFile', WriteProperties) {
   outputFile file('src/main/resources/META-INF/adaptris-version')
   property 'component.name', componentName
-  property 'build.version', project.version
+  property 'build.version', buildDetails.buildVersion()
   property 'groupId', project.group
   property 'artifactId', project.name
   property 'build.date', new Date().format('yyyy-MM-dd')
