@@ -4,7 +4,7 @@ plugins {
   id 'maven-publish'
   id 'jacoco'
   id 'com.github.spotbugs' version '5.0.6'
-  id 'org.owasp.dependencycheck' version '7.0.3'
+  id 'org.owasp.dependencycheck' version '7.0.4.1'
   id "org.gradle.test-retry" version "1.3.1"
   id "io.freefair.lombok" version "6.4.1"
   id 'org.barfuin.gradle.taskinfo' version '1.4.0'
@@ -434,9 +434,6 @@ dependencyCheck  {
   failBuildOnCVSS = 7.0
   analyzers {
     assemblyEnabled=false
-  }
-  data {
-    directory=new File(project.gradle.gradleUserHomeDir, "dependency-check-data-v7")
   }
 }
 
