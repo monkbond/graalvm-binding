@@ -22,15 +22,25 @@ jobs:
         java-version: '11'
         github-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Setup Ubuntu
+      id: ubuntu-bootstrap
       run: |
-        sudo apt-get -y update
-        sudo apt-get -y install haveged
-        sudo systemctl enable haveged
-        sudo systemctl restart haveged
+        sudo apt-get -y -qq update
+        sudo apt-get -y -qq install haveged
+        sudo systemctl -q enable haveged
+        sudo systemctl -q restart haveged
+        echo "::set-output name=today::$(/bin/date -u "+%Y%m%d")"
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
       with:
         gradle-version: wrapper
+        gradle-home-cache-excludes: dependency-check-data
+    - name: OWASP dependency-check-data cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.gradle/dependency-check-data
+        key: ${{ runner.os }}-dependency-check-data-${{ steps.ubuntu-bootstrap.outputs.today }}
+        restore-keys: |
+          ${{ runner.os }}-dependency-check-data-
     - name: Execute Gradle build
       run: |
         ./gradlew check
@@ -39,3 +49,9 @@ jobs:
         ./gradlew dependencyCheckAnalyze
     - name: codecov.io
       uses: codecov/codecov-action@v3.1.0
+    - name: Gradle Build Reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-reports
+        path: |
+          **/build/reports

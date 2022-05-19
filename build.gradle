@@ -11,6 +11,7 @@ plugins {
   id 'org.barfuin.gradle.jacocolog' version '2.0.0'
   id 'nebula.optional-base' version '7.0.0'
   id 'org.ajoberstar.grgit' version '5.0.0'
+  id 'org.cyclonedx.bom' version '1.5.0'
 }
 
 ext {
@@ -473,6 +474,6 @@ task deleteGeneratedFiles(type: Delete) {
 spotbugsTest.enabled = false
 processResources.dependsOn generateVersionFile
 javadoc.dependsOn offlinePackageList,umlJavadoc
-check.dependsOn jacocoTestReport
+check.dependsOn jacocoTestReport,cyclonedxBom
 clean.dependsOn deleteGeneratedFiles
 processTestResources.dependsOn copyUnitTestProperties
