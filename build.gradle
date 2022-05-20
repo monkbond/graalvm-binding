@@ -63,7 +63,7 @@ ext {
   slf4jVersion="1.7.36"
   junitJupiterVersion = '5.8.2'
   mockitoVersion = '4.5.1'
-  graalvmVersion = "22.1.0"
+  graalvmVersion = "22.1.0.1"
 }
 
 // jitpack executes with -Pgroup= -Pversion=
