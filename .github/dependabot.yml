@@ -8,6 +8,8 @@ updates:
       interval: "daily"
     allow:
       - dependency-type: "all"
+    commit-message:
+      prefix: "chore(dependencies): "
   - package-ecosystem: "github-actions"
     directory: "/"
     open-pull-requests-limit: 20
@@ -15,3 +17,5 @@ updates:
       interval: "daily"
     allow:
       - dependency-type: "all"
+    commit-message:
+      prefix: "chore(github-actions): "
