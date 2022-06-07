@@ -169,14 +169,18 @@ ext.interlokDependency = [
     def v = scmVersion.version
     def derivedInterlokVersion = scmVersion.version
     if (v ==~ '([0-9]+\\.)([0-9]+)\\.[0-9]+-SNAPSHOT') {
-      // 4.5.0-SNAPSHOT -> 4.5-SNAPSHOT
+      // gvm-4.5.0-SNAPSHOT -> interlok-4.5-SNAPSHOT
       derivedInterlokVersion =  v.replaceAll('([0-9]+\\.)([0-9]+)\\.[0-9]+-SNAPSHOT', '$1$2-SNAPSHOT')
     } else {
       // it must be an actual release
-      // 4.5.0 -> 4.5.0-RELEASE
-      // 4.5.1 -> 4.5.0-RELEASE (since dependency management should sort us out)
+      // gvm-4.5.0 -> 4.5.0-RELEASE
+      // gvm-4.5.1 -> 4.5.0-RELEASE (since dependency management should sort us out)
       derivedInterlokVersion =  v.replaceAll('([0-9]+\\.)([0-9]+)\\.[0-9]+', '$1$2.0-RELEASE')
     }
+    // This copes with the situation where someone has asked for 'develop-SNAPSHOT'
+    // but the commitRef is at the same location as the gitTag. In that situation
+    // axion will call it "4.5.0", which means we'll ask for 4.5.0-RELEASE.
+    // We just force it to be 4.5-SNAPSHOT so that we are explicit
     if (jitpackContext.is_jitpack()) {
       if (jitpackContext.buildVersion().endsWith("snapshot")) {
         derivedInterlokVersion =  v.replaceAll('([0-9]+\\.)([0-9]+).*', '$1$2-SNAPSHOT')
