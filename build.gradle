@@ -12,6 +12,7 @@ plugins {
   id 'nebula.optional-base' version '7.0.0'
   id 'org.ajoberstar.grgit' version '5.0.0'
   id 'org.cyclonedx.bom' version '1.6.1'
+  id 'pl.allegro.tech.build.axion-release' version '1.13.13'
 }
 
 ext {
@@ -29,21 +30,21 @@ ext {
   ]
   javaProvider= [
     vendor: { ->
-      return System.getProperty("java.vendor");
+      return System.getProperty("java.vendor")
     },
 
     isGraalVM: { ->
-      return javaProvider.vendor().toLowerCase().contains("graalvm");
+      return javaProvider.vendor().toLowerCase().contains("graalvm")
     }
   ]
 
-  releaseVersion = project.findProperty('releaseVersion') ?: interlokVersioning.latestSnapshot()
+  defaultReleaseVersion = project.findProperty('defaultReleaseVersion') ?: interlokVersioning.latestSnapshot()
   interlokArtifactRepo = project.findProperty('interlokArtifactRepo') ?: 'https://nexus.adaptris.net/nexus'
   mavenPublishUrl = project.findProperty('mavenPublishUrl') ?: 'https://maven.pkg.github.com/monkbond/graalvm-binding'
   mavenPublishUsername= project.findProperty('mavenPublishUsername') ?: System.getenv("GITHUB_ACTOR")
   mavenPublishPassword= project.findProperty('mavenPublishPassword') ?: System.getenv("GITHUB_TOKEN")
 
-  jitpackVersionOverride= project.findProperty('version') ?: releaseVersion
+  jitpackVersionOverride= project.findProperty('version') ?: defaultReleaseVersion
   javadocsBaseUrl = interlokArtifactRepo + "/content/sites/javadocs/com/adaptris"
   defaultNexusRepo = project.findProperty('defaultNexusRepo') ?: 'unknown'
   offlineJavadocPackageDir = new File(project.buildDir, "offline-javadoc-packages")
@@ -62,8 +63,6 @@ ext {
 }
 
 // jitpack executes with -Pgroup= -Pversion=
-// Can't use VERSION env var since this appears to be overridden by SDK man.
-// Since we set jitpackVersionOverride == -Pversion or defaults to 4.5-SNAPSHOT then
 ext.jitpackContext = [
 
   is_jitpack: { ->
@@ -153,27 +152,37 @@ ext.buildDetails = [
     if (jitpackContext.is_jitpack()) {
       return jitpackContext.version()
     }
-    return releaseVersion
+    return scmVersion.version
   },
 
   buildVersion: { ->
     if (jitpackContext.is_jitpack()) {
       return jitpackContext.buildVersion()
     }
-    return releaseVersion
+    return scmVersion.version
   }
 
 ]
 
 ext.interlokDependency = [
   interlokCoreVersion: { ->
+    def v = scmVersion.version
+    def derivedInterlokVersion = scmVersion.version
+    if (v ==~ '([0-9]+\\.)([0-9]+)\\.[0-9]+-SNAPSHOT') {
+      // 4.5.0-SNAPSHOT -> 4.5-SNAPSHOT
+      derivedInterlokVersion =  v.replaceAll('([0-9]+\\.)([0-9]+)\\.[0-9]+-SNAPSHOT', '$1$2-SNAPSHOT')
+    } else {
+      // it must be an actual release
+      // 4.5.0 -> 4.5.0-RELEASE
+      // 4.5.1 -> 4.5.0-RELEASE (since dependency management should sort us out)
+      derivedInterlokVersion =  v.replaceAll('([0-9]+\\.)([0-9]+)\\.[0-9]+', '$1$2.0-RELEASE')
+    }
     if (jitpackContext.is_jitpack()) {
       if (jitpackContext.buildVersion().endsWith("snapshot")) {
-        return interlokVersioning.latestSnapshot()
+        derivedInterlokVersion =  v.replaceAll('([0-9]+\\.)([0-9]+).*', '$1$2-SNAPSHOT')
       }
-      return interlokVersioning.latestRelease()
     }
-    return project.findProperty('interlokCoreVersion') ?: interlokVersioning.latestSnapshot()
+    return project.findProperty('interlokCoreVersion') ?: derivedInterlokVersion
   },
   interlokJavadocsUrl: { ->
     return javadocsBaseUrl + "/interlok-core/" + interlokDependency.interlokCoreVersion()
@@ -493,6 +502,14 @@ task deleteGeneratedFiles(type: Delete) {
          delombokTargetDir, "src/main/resources/META-INF/adaptris-version"
 }
 
+scmVersion {
+  sanitizeVersion = true
+  ignoreUncommittedChanges = false
+  checks {
+    // At the point of release, we probably still depend on 4.5-SNAPSHOT
+    snapshotDependencies = false
+  }
+}
 
 spotbugsTest.enabled = false
 processResources.dependsOn generateVersionFile
