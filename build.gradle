@@ -510,6 +510,9 @@ scmVersion {
   sanitizeVersion = true
   ignoreUncommittedChanges = false
   versionIncrementer 'incrementMinor'
+  tag {
+    prefix = ""
+  }
   checks {
     // At the point of release, we probably still depend on 4.5-SNAPSHOT
     snapshotDependencies = false
