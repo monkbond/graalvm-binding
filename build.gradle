@@ -509,6 +509,7 @@ task deleteGeneratedFiles(type: Delete) {
 scmVersion {
   sanitizeVersion = true
   ignoreUncommittedChanges = false
+  versionIncrementer 'incrementMinor'
   checks {
     // At the point of release, we probably still depend on 4.5-SNAPSHOT
     snapshotDependencies = false
