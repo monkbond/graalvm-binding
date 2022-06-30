@@ -12,7 +12,7 @@ plugins {
   id 'nebula.optional-base' version '7.0.0'
   id 'org.ajoberstar.grgit' version '5.0.0'
   id 'org.cyclonedx.bom' version '1.6.1'
-  id 'pl.allegro.tech.build.axion-release' version '1.13.14'
+  id 'pl.allegro.tech.build.axion-release' version '1.13.13'
 }
 
 ext {
@@ -60,6 +60,15 @@ ext {
   junitJupiterVersion = '5.8.2'
   mockitoVersion = '4.6.1'
   graalvmVersion = "22.1.0.1"
+  // scmVersion.version is resolved when attempting to resolve dependencies, which
+  // means it still has all the defaults, so it's either do it now or
+  // gradle -Prelease.versionIncrement=incrementMinor XXX
+  // gradle markNextVersion -Prelease.version=4.6.0
+  // If we 'gradle release' before 4.6-SNAPSHOT is available then
+  // we break ourselves.
+  scmVersion.versionIncrementer 'incrementMinor'
+  scmVersion.sanitizeVersion = true
+  scmVersion.ignoreUncommittedChanges = false
 }
 
 // jitpack executes with -Pgroup= -Pversion=
@@ -507,9 +516,6 @@ task deleteGeneratedFiles(type: Delete) {
 }
 
 scmVersion {
-  sanitizeVersion = true
-  ignoreUncommittedChanges = false
-  versionIncrementer 'incrementMinor'
   tag {
     prefix = ""
   }
@@ -518,6 +524,7 @@ scmVersion {
     snapshotDependencies = false
   }
 }
+
 
 spotbugsTest.enabled = false
 processResources.dependsOn generateVersionFile
