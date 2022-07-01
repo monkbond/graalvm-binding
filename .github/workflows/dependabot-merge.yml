@@ -15,6 +15,12 @@ jobs:
       ${{ github.event.sender.login == 'dependabot[bot]' }} &&
       ${{ startsWith(github.ref_name, 'dependabot') }}
     steps:
+      - name: Debug Step
+        id: debug-step
+        run: |
+          echo "${{ github.event.workflow_run.conclusion }}"
+          echo "${{ github.event.sender.login }}"
+          echo "${{ github.ref_name }}"
       - name: merge-if-built
         uses: ridedott/merge-me-action@v2
         with:
