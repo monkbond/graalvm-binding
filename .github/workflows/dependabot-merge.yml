@@ -10,10 +10,6 @@ on:
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    if: |
-      ${{ github.event.workflow_run.conclusion == 'success' }} &&
-      ${{ github.event.sender.login == 'dependabot[bot]' }} &&
-      ${{ startsWith(github.ref_name, 'dependabot') }}
     steps:
       - name: Debug Step
         id: debug-step
@@ -23,6 +19,10 @@ jobs:
           echo "${{ github.ref_name }}"
       - name: merge-if-built
         uses: ridedott/merge-me-action@v2
+        if: |
+          github.event.workflow_run.conclusion == 'success' &&
+          github.event.sender.login == 'dependabot[bot]' &&
+          startsWith(github.ref_name, 'dependabot')
         with:
           # Depending on branch protection rules, a  manually populated
           # `GITHUB_TOKEN_WORKAROUND` secret with permissions to push to
