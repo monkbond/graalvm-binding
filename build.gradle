@@ -59,7 +59,7 @@ ext {
   slf4jVersion="1.7.36"
   junitJupiterVersion = '5.8.2'
   mockitoVersion = '4.6.1'
-  graalvmVersion = "22.1.0.1"
+  graalvmVersion = "22.2.0"
   // scmVersion.version is resolved when attempting to resolve dependencies, which
   // means it still has all the defaults, so it's either do it now or
   // gradle -Prelease.versionIncrement=incrementMinor XXX
