@@ -23,8 +23,7 @@ jobs:
       run: |
         sudo apt-get -y update
         sudo apt-get -y install haveged graphviz
-        sudo systemctl enable haveged
-        sudo systemctl restart haveged
+        sudo systemctl -q enable haveged --now
     - name: Gradle Build
       uses: gradle/gradle-build-action@v2
       with:

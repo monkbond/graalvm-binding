@@ -2,9 +2,8 @@ name: Gradle Build
 
 on:
   push:
-    branches-ignore:
-      - main
-      - master
+    branches:
+      - develop
   pull_request:
     branches:
       - develop
@@ -28,8 +27,7 @@ jobs:
       run: |
         sudo apt-get -y -qq update
         sudo apt-get -y -qq install haveged
-        sudo systemctl -q enable haveged
-        sudo systemctl -q restart haveged
+        sudo systemctl -q enable haveged --now
         echo "::set-output name=today::$(/bin/date -u "+%Y%m%d")"
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
