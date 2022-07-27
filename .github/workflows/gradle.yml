@@ -16,12 +16,17 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - name: Set up GraalVM
-      uses: graalvm/setup-graalvm@v1
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
       with:
-        version: 'latest'
-        java-version: '11'
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        java-version: 11
+        distribution: 'temurin'
+    # - name: Set up GraalVM
+    #   uses: graalvm/setup-graalvm@v1
+    #   with:
+    #     version: 'latest'
+    #     java-version: '11'
+    #     github-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Setup Ubuntu
       id: ubuntu-bootstrap
       run: |
@@ -42,6 +47,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-dependency-check-data-
     - name: Execute Gradle build
+      env:
+        JDK_JAVA_OPTIONS: -Dpolyglot.js.nashorn-compat=true -Dpolyglot.engine.WarnInterpreterOnly=false
       run: |
         ./gradlew check
     - name: Gradle Dependency Check Analyze
