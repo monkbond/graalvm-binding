@@ -12,7 +12,7 @@ plugins {
   id 'nebula.optional-base' version '7.0.0'
   id 'org.ajoberstar.grgit' version '5.0.0'
   id 'org.cyclonedx.bom' version '1.7.0'
-  id 'pl.allegro.tech.build.axion-release' version '1.13.14'
+  id 'pl.allegro.tech.build.axion-release' version '1.14.0'
 }
 
 ext {
