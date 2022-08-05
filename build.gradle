@@ -67,6 +67,7 @@ ext {
   // If we 'gradle release' before 4.6-SNAPSHOT is available then
   // we break ourselves.
   scmVersion.versionIncrementer 'incrementMinor'
+  scmVersion.tag.prefix=""
   scmVersion.sanitizeVersion = true
   scmVersion.ignoreUncommittedChanges = false
 }
