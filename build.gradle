@@ -58,7 +58,7 @@ ext {
   organizationUrl = "https://monkbond.github.io"
   slf4jVersion="1.7.36"
   junitJupiterVersion = '5.9.0'
-  mockitoVersion = '4.7.0'
+  mockitoVersion = '4.8.0'
   graalvmVersion = "22.2.0"
   // scmVersion.version is resolved when attempting to resolve dependencies, which
   // means it still has all the defaults, so it's either do it now or
