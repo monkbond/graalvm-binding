@@ -1,4 +1,29 @@
 import org.apache.tools.ant.taskdefs.condition.Os
+
+buildscript {
+  // axion-release 1.14.1 -> 5.13.1 (J8+)
+  // grgit 5.0.0 -> jgit-6.0.0 (J11+)
+  // jgit 6.0.0 & jgit 5.13.1 have different signing keys
+  // so there is a "org.eclipse.jgit.transport.JschConfigSessionFactory" signer info issue.
+  // probably because of the inclusions of the additional modules which won't
+  // be optimistically upgraded to 6.0.0
+  // gradle buildDependencies > deps.txt
+  // grgit 5.0.0 works fine with 5.13 jgit so pin at the same version as
+  // axion-release (it only depends on jgit proper)
+  dependencies {
+    classpath ("org.eclipse.jgit:org.eclipse.jgit:5.13.1.202206130422-r") {
+      version {
+        strictly "5.13.1.202206130422-r"
+        because "axion-release is more important than grgit"
+      }
+    }
+    classpath ("org.eclipse.jgit:org.eclipse.jgit.ssh.jsch:5.13.1.202206130422-r")
+    classpath ("org.eclipse.jgit:org.eclipse.jgit.ssh.apache:5.13.1.202206130422-r")
+    classpath ("org.eclipse.jgit:org.eclipse.jgit.gpg.bc:5.13.1.202206130422-r")
+    classpath ("org.eclipse.jgit:org.eclipse.jgit.ui:5.13.1.202206130422-r")
+  }
+}
+
 plugins {
   id 'java-library'
   id 'maven-publish'
