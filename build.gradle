@@ -19,7 +19,7 @@ buildscript {
     }
     classpath ("org.eclipse.jgit:org.eclipse.jgit.ssh.jsch:5.13.1.202206130422-r")
     classpath ("org.eclipse.jgit:org.eclipse.jgit.ssh.apache:6.3.0.202209071007-r")
-    classpath ("org.eclipse.jgit:org.eclipse.jgit.gpg.bc:5.13.1.202206130422-r")
+    classpath ("org.eclipse.jgit:org.eclipse.jgit.gpg.bc:6.3.0.202209071007-r")
     classpath ("org.eclipse.jgit:org.eclipse.jgit.ui:6.3.0.202209071007-r")
   }
 }
