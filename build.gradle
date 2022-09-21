@@ -81,7 +81,7 @@ ext {
 
   organizationName = "com.github.monkbond"
   organizationUrl = "https://monkbond.github.io"
-  slf4jVersion="1.7.36"
+  slf4jVersion="2.0.2"
   junitJupiterVersion = '5.9.1'
   mockitoVersion = '4.8.0'
   graalvmVersion = "22.2.0"
@@ -315,6 +315,7 @@ dependencies {
   // Long form to avoid $variable use.
   api group: "com.adaptris", name: "interlok-core", version: interlokDependency.interlokCoreVersion(), changing: true
   api group: "com.adaptris", name: "interlok-common", version: interlokDependency.interlokCoreVersion(), changing: true
+  implementation ("org.slf4j:slf4j-api:$slf4jVersion")
   annotationProcessor group: "com.adaptris", name: "interlok-core-apt", version: interlokDependency.interlokCoreVersion(), changing: true
 
   umlDoclet("nl.talsmasoftware:umldoclet:2.0.18")
