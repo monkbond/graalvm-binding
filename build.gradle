@@ -11,16 +11,16 @@ buildscript {
   // grgit 5.0.0 works fine with 5.13 jgit so pin at the same version as
   // axion-release (it only depends on jgit proper)
   dependencies {
-    classpath ("org.eclipse.jgit:org.eclipse.jgit:6.3.0.202209071007-r") {
+    classpath ("org.eclipse.jgit:org.eclipse.jgit") {
       version {
         strictly "5.13.1.202206130422-r"
         because "axion-release is more important than grgit"
       }
     }
-    classpath ("org.eclipse.jgit:org.eclipse.jgit.ssh.jsch:5.13.1.202206130422-r")
-    classpath ("org.eclipse.jgit:org.eclipse.jgit.ssh.apache:6.3.0.202209071007-r")
-    classpath ("org.eclipse.jgit:org.eclipse.jgit.gpg.bc:6.3.0.202209071007-r")
-    classpath ("org.eclipse.jgit:org.eclipse.jgit.ui:6.3.0.202209071007-r")
+    classpath ("org.eclipse.jgit:org.eclipse.jgit.ssh.jsch") { version { strictly "5.13.1.202206130422-r" }}
+    classpath ("org.eclipse.jgit:org.eclipse.jgit.ssh.apache")  { version { strictly "5.13.1.202206130422-r" }}
+    classpath ("org.eclipse.jgit:org.eclipse.jgit.gpg.bc")  { version { strictly "5.13.1.202206130422-r" }}
+    classpath ("org.eclipse.jgit:org.eclipse.jgit.ui")  { version { strictly "5.13.1.202206130422-r" }}
   }
 }
 
