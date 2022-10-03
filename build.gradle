@@ -318,7 +318,7 @@ dependencies {
   implementation ("org.slf4j:slf4j-api:$slf4jVersion")
   annotationProcessor group: "com.adaptris", name: "interlok-core-apt", version: interlokDependency.interlokCoreVersion(), changing: true
 
-  umlDoclet("nl.talsmasoftware:umldoclet:2.0.18")
+  umlDoclet("nl.talsmasoftware:umldoclet:2.0.19")
 
   if (!javaProvider.isGraalVM()) {
     // This is enough to do polyglot javascript with graal.
