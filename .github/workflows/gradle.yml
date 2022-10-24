@@ -29,7 +29,7 @@ jobs:
         sudo apt-get -y -qq update
         sudo apt-get -y -qq install haveged
         sudo systemctl -q enable haveged --now
-        echo "::set-output name=today::$(/bin/date -u "+%Y%m%d")"
+        echo "today=$(/bin/date -u '+%Y%m%d')" >> $GITHUB_OUTPUT
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
       with:
