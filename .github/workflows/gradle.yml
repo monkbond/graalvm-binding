@@ -58,3 +58,25 @@ jobs:
         name: build-reports
         path: |
           **/build/reports
+
+  dependabot-merge:
+    needs: build
+    permissions:
+      contents: write
+      pull-requests: write
+    if: |
+      github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Find associated PR
+      uses: jwalton/gh-find-current-pr@v1
+      id: findpr
+      with:
+        github-token: ${{ github.token }}
+        state: open
+        sha: ${{ github.event.pull_request.head.sha || github.event.workflow_run.head_sha || github.sha }}
+    - name: merge-if-built
+      uses: fastify/github-action-merge-dependabot@v3
+      with:
+        pr-number: ${{ steps.findpr.outputs.pr }}
+        target: patch
