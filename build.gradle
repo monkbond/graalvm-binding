@@ -30,7 +30,7 @@ plugins {
   id 'jacoco'
   id 'com.github.spotbugs' version '5.0.13'
   id 'org.owasp.dependencycheck' version '7.3.2'
-  id "org.gradle.test-retry" version "1.4.1"
+  id "org.gradle.test-retry" version "1.5.0"
   id "io.freefair.lombok" version "6.5.1"
   id 'org.barfuin.gradle.taskinfo' version '2.0.0'
   id 'org.barfuin.gradle.jacocolog' version '2.0.0'
