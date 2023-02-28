@@ -24,7 +24,7 @@ jobs:
         gradle-version: wrapper
         gradle-home-cache-excludes: dependency-check-data
     - name: gradle-dependency-submission
-      uses: mikepenz/gradle-dependency-submission@v0.8.4
+      uses: mikepenz/gradle-dependency-submission@v0.8.5
       with:
         use-gradlew: true
         gradle-build-module: |-
