@@ -64,7 +64,7 @@ ext {
 
   organizationName = "com.github.monkbond"
   organizationUrl = "https://monkbond.github.io"
-  slf4jVersion="2.0.7"
+  slf4jVersion="2.0.9"
   junitJupiterVersion = '5.10.0'
   mockitoVersion = '5.2.0'
   graalvmVersion = "22.3.2"
