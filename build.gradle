@@ -18,8 +18,7 @@ plugins {
   id "io.freefair.lombok" version "8.3"
   id 'org.barfuin.gradle.taskinfo' version '2.1.0'
   id 'org.barfuin.gradle.jacocolog' version '3.1.0'
-  id 'nebula.optional-base' version '7.0.0'
-  id 'org.cyclonedx.bom' version '1.7.4'
+  // id 'nebula.optional-base' version '7.0.0'
   id 'pl.allegro.tech.build.axion-release' version '1.15.4'
 }
 
@@ -315,9 +314,9 @@ dependencies {
 
   if (!javaProvider.isGraalVM()) {
     // This is enough to do polyglot javascript with graal.
-    implementation "org.graalvm.sdk:graal-sdk:$graalvmVersion",  optional
-    implementation "org.graalvm.js:js:$graalvmVersion",  optional
-    implementation "org.graalvm.js:js-scriptengine:$graalvmVersion",  optional
+    compileOnly "org.graalvm.sdk:graal-sdk:$graalvmVersion"
+    testRuntimeOnly "org.graalvm.js:js:$graalvmVersion"
+    testRuntimeOnly "org.graalvm.js:js-scriptengine:$graalvmVersion"
   }
 
   testImplementation group: "com.adaptris", name: "interlok-stubs", version: interlokDependency.interlokCoreVersion(), changing: true
@@ -428,7 +427,7 @@ jacocoTestReport {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-  classifier = 'javadoc'
+  archiveClassifier = 'javadoc'
   from javadoc.destinationDir
 }
 
@@ -452,7 +451,7 @@ publishing {
     mavenJava(MavenPublication) {
       from components.java
 
-      artifact javadocJar { classifier "javadoc" }
+      artifact javadocJar { archiveClassifier = 'javadoc' }
 
       pom.withXml {
         asNode().appendNode("name", componentName)
