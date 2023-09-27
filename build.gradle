@@ -20,7 +20,7 @@ plugins {
   id 'org.barfuin.gradle.jacocolog' version '3.1.0'
   id 'nebula.optional-base' version '7.0.0'
   id 'org.cyclonedx.bom' version '1.7.4'
-  id 'pl.allegro.tech.build.axion-release' version '1.15.4'
+  id 'pl.allegro.tech.build.axion-release' version '1.15.5'
 }
 
 ext {
