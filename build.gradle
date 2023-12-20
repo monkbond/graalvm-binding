@@ -2,7 +2,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 buildscript {
   configurations.all {
     resolutionStrategy.dependencySubstitution {
-      substitute module('com.jcraft:jsch') using module('com.github.mwiede:jsch:0.2.14')
+      substitute module('com.jcraft:jsch') using module('com.github.mwiede:jsch:0.2.15')
     }
   }
 }
@@ -300,7 +300,7 @@ configurations {
 configurations.all {
   resolutionStrategy.cacheChangingModulesFor 0, "seconds"
   resolutionStrategy.dependencySubstitution {
-    substitute module('com.jcraft:jsch') using module('com.github.mwiede:jsch:0.2.14')
+    substitute module('com.jcraft:jsch') using module('com.github.mwiede:jsch:0.2.15')
   }
 }
 
