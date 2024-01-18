@@ -36,7 +36,7 @@ jobs:
         gradle-version: wrapper
         gradle-home-cache-excludes: dependency-check-data
     - name: OWASP dependency-check-data cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.gradle/dependency-check-data
         key: ${{ runner.os }}-dependency-check-data-${{ steps.ubuntu-bootstrap.outputs.today }}
