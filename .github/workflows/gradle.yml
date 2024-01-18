@@ -48,6 +48,7 @@ jobs:
       run: |
         ./gradlew check
     - name: Gradle Dependency Check Analyze
+      if: ${{ github.actor != 'dependabot[bot]' }}
       run: |
         ./gradlew dependencyCheckAnalyze
     - name: codecov.io
